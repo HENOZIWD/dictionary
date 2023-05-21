@@ -19,8 +19,10 @@ export default function RootLayout({
       <body>
         <nav>
           <div>navigation bar</div>
-          <Link href='/'>Main page</Link>
-          <Link href='/dictionary'>Dictionary</Link>
+          <div>
+            <Link href='/'>Main page</Link>
+            <Link href='/dictionary'>Dictionary</Link>
+          </div>
         </nav>
         {children}
       </body>
