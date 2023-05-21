@@ -57,7 +57,9 @@ export default function AddWord() {
       <button
         type="button"
         onClick={handleAddWord}
-      >Submit</button>
+      >
+        Submit
+      </button>
 
     </div>
 
