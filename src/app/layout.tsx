@@ -1,18 +1,12 @@
+import React from 'react';
 import Link from 'next/link';
 import './globals.css';
-import { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'Dictionary',
-  description: 'Memorize your words!',
-}
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  
   return (
     <html lang="en">
 
@@ -20,13 +14,13 @@ export default function RootLayout({
         <nav>
           <div>navigation bar</div>
           <div>
-            <Link href='/'>Main page</Link>
-            <Link href='/dictionary'>Dictionary</Link>
+            <Link href="/">Main page</Link>
+            <Link href="/dictionary">Dictionary</Link>
           </div>
         </nav>
         {children}
       </body>
 
     </html>
-  )
+  );
 }

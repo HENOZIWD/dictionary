@@ -1,4 +1,6 @@
-import { Dispatch, createContext, useContext, useReducer } from 'react';
+import React, {
+  Dispatch, createContext, useContext, useReducer,
+} from 'react';
 
 export interface IWordData {
   id: number;
@@ -17,15 +19,46 @@ type IActionData = {
 } | {
   type: 'deleted';
   id: number;
-}
+};
 
 const WordsContext = createContext<IWordData[] | null>(null);
 const WordsDispatchContext = createContext<Dispatch<IActionData> | null>(null);
 
+function wordsReducer(words: IWordData[], action: IActionData) {
+  switch (action.type) {
+    case 'added': {
+      return [...words, {
+        id: action.id,
+        wordName: action.wordName,
+        meaning: action.meaning,
+      }];
+    }
+
+    case 'changed': {
+      return words.map((w) => {
+        if (w.id === action.word.id) {
+          return action.word;
+        }
+        return w;
+      });
+    }
+
+    case 'deleted': {
+      return words.filter((w) => w.id !== action.id);
+    }
+
+    default: {
+      throw Error('Unknown action');
+    }
+  }
+}
+
+const initialWords: IWordData[] = [];
+
 export function WordsProvider({ children }: { children: React.ReactNode }) {
   const [words, dispatch] = useReducer(
     wordsReducer,
-    initialWords
+    initialWords,
   );
 
   return (
@@ -34,7 +67,7 @@ export function WordsProvider({ children }: { children: React.ReactNode }) {
         {children}
       </WordsDispatchContext.Provider>
     </WordsContext.Provider>
-  )
+  );
 }
 
 export function useWords() {
@@ -54,37 +87,3 @@ export function useWordsDispatch() {
 
   return dispatch;
 }
-
-function wordsReducer(words: IWordData[], action: IActionData) {
-  switch (action.type) {
-
-    case 'added': {
-      return [...words, {
-        id: action.id,
-        wordName: action.wordName,
-        meaning: action.meaning
-      }];
-    }
-
-    case 'changed': {
-      return words.map(w => {
-        if (w.id === action.word.id) {
-          return action.word;
-        }
-        else {
-          return w;
-        }
-      });
-    }
-
-    case 'deleted': {
-      return words.filter(w => w.id !== action.id);
-    }
-
-    default: {
-      throw Error('Unknown action');
-    }
-  }
-}
-
-const initialWords: IWordData[] = [];

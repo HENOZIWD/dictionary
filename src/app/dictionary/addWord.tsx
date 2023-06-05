@@ -1,16 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useWords, useWordsDispatch } from './wordsContext';
 
 export default function AddWord() {
-
   const [wordName, setWordName] = useState<string>('');
   const [meaning, setMeaning] = useState<string>('');
   const words = useWords();
   const dispatch = useWordsDispatch();
 
-  const handleAddWord = (event: React.MouseEvent) => {
+  const handleAddWord = (event: React.FormEvent) => {
     event.preventDefault();
 
     const trimmedWordName = wordName.trim();
@@ -25,44 +24,36 @@ export default function AddWord() {
         wordName: trimmedWordName,
         meaning: trimmedMeaning,
       });
-    }
-    else {
+    } else {
       alert('Please enter the word and meaning correctly.');
     }
-  }
+  };
 
   return (
-    <>
-    
     <div>
-
-      <label>
-        Word name:&nbsp;
-        <input
-          type="text"
-          value={wordName}
-          onChange={e => setWordName(e.target.value)}
-        />
-      </label>
-      <br />
-      <label>
-        Meanings:&nbsp;
-        <input
-          type="text"
-          value={meaning}
-          onChange={e => setMeaning(e.target.value)}
-        />
-      </label>
-      <br />
-      <button
-        type="button"
-        onClick={handleAddWord}
-      >
-        Submit
-      </button>
-
+      <form onSubmit={handleAddWord}>
+        <label htmlFor="word-name">
+          Word name:&nbsp;
+          <input
+            id="word-name"
+            type="text"
+            value={wordName}
+            onChange={(e) => setWordName(e.target.value)}
+          />
+        </label>
+        <br />
+        <label htmlFor="meaning">
+          Meanings:&nbsp;
+          <input
+            id="meaning"
+            type="text"
+            value={meaning}
+            onChange={(e) => setMeaning(e.target.value)}
+          />
+        </label>
+        <br />
+        <button type="submit">Submit</button>
+      </form>
     </div>
-
-    </>
-  )
+  );
 }
