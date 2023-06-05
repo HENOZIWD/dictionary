@@ -5,6 +5,6 @@
     "airbnb-typescript"
   ],
   "parserOptions": {
-    "project": "./dictionary/tsconfig.json"
+    "project": "./*/tsconfig.json"
   }
 }
