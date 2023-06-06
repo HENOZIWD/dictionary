@@ -9,7 +9,7 @@ export default function AddWord() {
   const words = useWords();
   const dispatch = useWordsDispatch();
 
-  const handleAddWord = (event: React.FormEvent) => {
+  const handleAddWord = async (event: React.FormEvent) => {
     event.preventDefault();
 
     const trimmedWordName = wordName.trim();
@@ -18,12 +18,17 @@ export default function AddWord() {
     if (trimmedWordName && trimmedMeaning) {
       setWordName('');
       setMeaning('');
-      dispatch({
-        type: 'added',
-        id: words.length + 1,
-        wordName: trimmedWordName,
-        meaning: trimmedMeaning,
-      });
+      try {
+        await fetch(`/dictionary/addWord/api?wordName=${trimmedWordName}&meaning=${trimmedMeaning}`);
+        dispatch({
+          type: 'added',
+          id: words[words.length - 1].id + 1,
+          wordName: trimmedWordName,
+          meaning: trimmedMeaning,
+        });
+      } catch (err) {
+        console.error(err);
+      }
     } else {
       alert('Please enter the word and meaning correctly.');
     }
