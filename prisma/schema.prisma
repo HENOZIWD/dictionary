@@ -1,0 +1,15 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model dictionary {
+  id        Int    @id @default(autoincrement())
+  word_name String @db.VarChar(255)
+  meaning   String @db.VarChar(255)
+}

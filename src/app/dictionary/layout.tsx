@@ -15,7 +15,6 @@ export default function DictionaryLayout({
         <div>navigation bar&#40;Dictionary&#41;</div>
         <div>
           <Link href="/dictionary">Dictionary</Link>
-          <Link href="/dictionary/quiz">Quiz</Link>
         </div>
       </nav>
       {children}

@@ -1,5 +1,5 @@
 import React, {
-  Dispatch, createContext, useContext, useReducer,
+  Dispatch, createContext, useContext, useEffect, useReducer,
 } from 'react';
 
 export interface IWordData {
@@ -19,6 +19,9 @@ type IActionData = {
 } | {
   type: 'deleted';
   id: number;
+} | {
+  type: 'loaded';
+  words: IWordData[];
 };
 
 const WordsContext = createContext<IWordData[] | null>(null);
@@ -47,19 +50,44 @@ function wordsReducer(words: IWordData[], action: IActionData) {
       return words.filter((w) => w.id !== action.id);
     }
 
+    case 'loaded': {
+      return [...words, ...action.words];
+    }
+
     default: {
       throw Error('Unknown action');
     }
   }
 }
 
-const initialWords: IWordData[] = [];
+const getInitialWords = async () => {
+  try {
+    const res = await fetch('/dictionary/getWords/api');
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+
+    return undefined;
+  }
+};
+
+const initialState: IWordData[] = [];
 
 export function WordsProvider({ children }: { children: React.ReactNode }) {
   const [words, dispatch] = useReducer(
     wordsReducer,
-    initialWords,
+    initialState,
   );
+
+  useEffect(() => {
+    getInitialWords().then((wordsData) => {
+      dispatch({
+        type: 'loaded',
+        words: wordsData,
+      });
+    });
+  }, []);
 
   return (
     <WordsContext.Provider value={words}>
