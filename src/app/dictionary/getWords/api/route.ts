@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '../../lib/client';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     const newEntry = await prisma.dictionary.findMany();
