@@ -29,6 +29,28 @@ function Word({ word }: IWordProps) {
     }
   };
 
+  const handleDelete = async (event: React.MouseEvent) => {
+    event.preventDefault();
+
+    try {
+      await fetch('/dictionary/api/deleteWord', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: word.id,
+        }),
+      });
+    } catch (err) {
+      console.error(err);
+    }
+    dispatch({
+      type: 'deleted',
+      id: word.id,
+    });
+  };
+
   return (
     <div>
       {!isEditing
@@ -43,12 +65,7 @@ function Word({ word }: IWordProps) {
             <button type="button" onClick={() => setIsEditing(true)}>Edit</button>
             <button
               type="button"
-              onClick={() => {
-                dispatch({
-                  type: 'deleted',
-                  id: word.id,
-                });
-              }}
+              onClick={handleDelete}
             >
               Delete
             </button>
