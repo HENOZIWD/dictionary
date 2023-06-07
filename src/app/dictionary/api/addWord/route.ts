@@ -3,11 +3,11 @@ import { prisma } from '../../lib/client';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(req: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url);
-    const wordName = searchParams.get('wordName');
-    const meaning = searchParams.get('meaning');
+    const requestBody = await req.json();
+    const { wordName } = requestBody;
+    const { meaning } = requestBody;
 
     if (!wordName || !meaning) {
       throw new Error('Invalid params.');

@@ -62,8 +62,14 @@ function wordsReducer(words: IWordData[], action: IActionData) {
 
 const getInitialWords = async () => {
   try {
-    const res = await fetch('/dictionary/getWords/api');
+    const res = await fetch('/dictionary/api/getWords', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
     const data = await res.json();
+
     return data;
   } catch (error) {
     console.error(error);

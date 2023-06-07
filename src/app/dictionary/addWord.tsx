@@ -19,7 +19,16 @@ export default function AddWord() {
       setWordName('');
       setMeaning('');
       try {
-        await fetch(`/dictionary/addWord/api?wordName=${trimmedWordName}&meaning=${trimmedMeaning}`);
+        await fetch('/dictionary/api/addWord', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            wordName: trimmedWordName,
+            meaning: trimmedMeaning,
+          }),
+        });
         dispatch({
           type: 'added',
           id: words[words.length - 1].id + 1,
