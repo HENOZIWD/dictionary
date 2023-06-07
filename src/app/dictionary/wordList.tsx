@@ -7,23 +7,39 @@ function Word({ word }: IWordProps) {
   const [editWordName, setEditWordName] = useState<string>(word.wordName);
   const [editMeaning, setEditMeaning] = useState<string>(word.meaning);
 
-  const handleEditSave = (event: React.MouseEvent) => {
+  const handleEditSave = async (event: React.MouseEvent) => {
     event.preventDefault();
 
     const trimmedWordName = editWordName.trim();
     const trimmedMeaning = editMeaning.trim();
 
     if (trimmedWordName && trimmedMeaning) {
-      dispatch({
-        type: 'changed',
-        word: {
-          ...word,
-          wordName: trimmedWordName,
-          meaning: trimmedMeaning,
-        },
-      });
+      try {
+        await fetch('/dictionary/api/updateWord', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id: word.id,
+            wordName: trimmedWordName,
+            meaning: trimmedMeaning,
+          }),
+        });
 
-      setIsEditing(false);
+        dispatch({
+          type: 'changed',
+          word: {
+            ...word,
+            wordName: trimmedWordName,
+            meaning: trimmedMeaning,
+          },
+        });
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsEditing(false);
+      }
     } else {
       alert('Please enter the word and meaning correctly.');
     }
