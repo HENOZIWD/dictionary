@@ -18,6 +18,7 @@ export default function AddWord() {
     if (trimmedWordName && trimmedMeaning) {
       setWordName('');
       setMeaning('');
+      const nextId = words[words.length - 1].id + 1;
       try {
         await fetch('/dictionary/api/addWord', {
           method: 'POST',
@@ -25,13 +26,14 @@ export default function AddWord() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
+            id: nextId,
             wordName: trimmedWordName,
             meaning: trimmedMeaning,
           }),
         });
         dispatch({
           type: 'added',
-          id: words[words.length - 1].id + 1,
+          id: nextId,
           wordName: trimmedWordName,
           meaning: trimmedMeaning,
         });

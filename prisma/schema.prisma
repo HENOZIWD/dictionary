@@ -9,7 +9,7 @@ datasource db {
 }
 
 model dictionary {
-  id       Int    @id @default(autoincrement())
+  id       Int    @id
   wordName String @db.VarChar(255)
   meaning  String @db.VarChar(255)
 }

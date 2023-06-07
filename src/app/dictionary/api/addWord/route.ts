@@ -6,6 +6,7 @@ export const dynamic = 'force-dynamic';
 export async function POST(req: NextRequest) {
   try {
     const requestBody = await req.json();
+    const { id } = requestBody;
     const { wordName } = requestBody;
     const { meaning } = requestBody;
 
@@ -14,6 +15,7 @@ export async function POST(req: NextRequest) {
     }
     const newEntry = await prisma.dictionary.create({
       data: {
+        id,
         wordName,
         meaning,
       },
