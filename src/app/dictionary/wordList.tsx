@@ -14,32 +14,34 @@ function Word({ word }: IWordProps) {
     const trimmedMeaning = editMeaning.trim();
 
     if (trimmedWordName && trimmedMeaning) {
-      try {
-        await fetch('/dictionary/api/updateWord', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            id: word.id,
-            wordName: trimmedWordName,
-            meaning: trimmedMeaning,
-          }),
-        });
+      if (trimmedWordName !== word.wordName || trimmedMeaning !== word.meaning) {
+        try {
+          await fetch('/dictionary/api/updateWord', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              id: word.id,
+              wordName: trimmedWordName,
+              meaning: trimmedMeaning,
+            }),
+          });
 
-        dispatch({
-          type: 'changed',
-          word: {
-            ...word,
-            wordName: trimmedWordName,
-            meaning: trimmedMeaning,
-          },
-        });
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setIsEditing(false);
+          dispatch({
+            type: 'changed',
+            word: {
+              ...word,
+              wordName: trimmedWordName,
+              meaning: trimmedMeaning,
+            },
+          });
+        } catch (err) {
+          console.error(err);
+        }
       }
+
+      setIsEditing(false);
     } else {
       alert('Please enter the word and meaning correctly.');
     }
