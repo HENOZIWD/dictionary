@@ -39,7 +39,7 @@ function Word({ word }: IWordProps) {
             {word.wordName}
             :
             {word.meaning}
-&nbsp;
+            &nbsp;
             <button type="button" onClick={() => setIsEditing(true)}>Edit</button>
             <button
               type="button"
@@ -56,8 +56,16 @@ function Word({ word }: IWordProps) {
         )
         : (
           <>
-            <input type="text" value={editWordName} onChange={(e) => setEditWordName(e.target.value)} />
-            <input type="text" value={editMeaning} onChange={(e) => setEditMeaning(e.target.value)} />
+            <input
+              type="text"
+              value={editWordName}
+              onChange={(e) => setEditWordName(e.target.value)}
+            />
+            <input
+              type="text"
+              value={editMeaning}
+              onChange={(e) => setEditMeaning(e.target.value)}
+            />
             <button
               type="button"
               onClick={handleEditSave}
