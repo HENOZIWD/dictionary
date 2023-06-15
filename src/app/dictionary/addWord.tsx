@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useWords, useWordsDispatch } from './wordsContext';
 
 export default function AddWord() {
@@ -8,6 +8,14 @@ export default function AddWord() {
   const dispatch = useWordsDispatch();
   const [wordName, setWordName] = useState<string>('');
   const [meaning, setMeaning] = useState<string>('');
+  const wordNameInputRef = useRef<HTMLInputElement>(null);
+  const meaningInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (wordNameInputRef.current) {
+      wordNameInputRef.current.focus();
+    }
+  }, []);
 
   const handleAddWord = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -16,8 +24,6 @@ export default function AddWord() {
     const trimmedMeaning = meaning.trim();
 
     if (trimmedWordName && trimmedMeaning) {
-      setWordName('');
-      setMeaning('');
       const nextId = words.length > 0 ? words[words.length - 1].id + 1 : 1;
       try {
         await fetch('/dictionary/api/addWord', {
@@ -39,9 +45,23 @@ export default function AddWord() {
         });
       } catch (err) {
         console.error(err);
+      } finally {
+        if (wordNameInputRef.current) {
+          wordNameInputRef.current.focus();
+        }
+
+        setWordName('');
+        setMeaning('');
       }
     } else {
       alert('Please enter the word and meaning correctly.');
+      if (!trimmedWordName) {
+        if (wordNameInputRef.current) {
+          wordNameInputRef.current.focus();
+        }
+      } else if (meaningInputRef.current) {
+        meaningInputRef.current.focus();
+      }
     }
   };
 
@@ -55,6 +75,7 @@ export default function AddWord() {
             type="text"
             value={wordName}
             onChange={(e) => setWordName(e.target.value)}
+            ref={wordNameInputRef}
           />
         </label>
         <br />
@@ -65,6 +86,7 @@ export default function AddWord() {
             type="text"
             value={meaning}
             onChange={(e) => setMeaning(e.target.value)}
+            ref={meaningInputRef}
           />
         </label>
         <br />
