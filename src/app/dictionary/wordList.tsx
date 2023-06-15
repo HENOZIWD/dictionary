@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
-import { IWordData, useWords, useWordsDispatch } from './wordsContext';
+import { useWords, IWordData, useWordsDispatch } from './wordsContext';
 
-function Word({ word }: IWordProps) {
+interface IWordProps {
+  index: number;
+  word: IWordData;
+}
+
+function Word({ index, word }: IWordProps) {
   const dispatch = useWordsDispatch();
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editWordName, setEditWordName] = useState<string>(word.wordName);
@@ -60,13 +65,14 @@ function Word({ word }: IWordProps) {
           id: word.id,
         }),
       });
+
+      dispatch({
+        type: 'deleted',
+        id: word.id,
+      });
     } catch (err) {
       console.error(err);
     }
-    dispatch({
-      type: 'deleted',
-      id: word.id,
-    });
   };
 
   return (
@@ -74,13 +80,19 @@ function Word({ word }: IWordProps) {
       {!isEditing
         ? (
           <>
-            {word.id}
+            {index}
             .
             {word.wordName}
             :
             {word.meaning}
             &nbsp;
-            <button type="button" onClick={() => setIsEditing(true)}>Edit</button>
+            <button
+              type="button"
+              onClick={() => setIsEditing(true)}
+            >
+              Edit
+
+            </button>
             <button
               type="button"
               onClick={handleDelete}
@@ -130,13 +142,12 @@ export default function WordList() {
     <ul>
       {words.map((word) => (
         <li key={word.id}>
-          <Word word={word} />
+          <Word
+            index={word.id}
+            word={word}
+          />
         </li>
       ))}
     </ul>
   );
-}
-
-interface IWordProps {
-  word: IWordData;
 }

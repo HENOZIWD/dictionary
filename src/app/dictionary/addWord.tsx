@@ -4,10 +4,10 @@ import React, { useState } from 'react';
 import { useWords, useWordsDispatch } from './wordsContext';
 
 export default function AddWord() {
-  const [wordName, setWordName] = useState<string>('');
-  const [meaning, setMeaning] = useState<string>('');
   const words = useWords();
   const dispatch = useWordsDispatch();
+  const [wordName, setWordName] = useState<string>('');
+  const [meaning, setMeaning] = useState<string>('');
 
   const handleAddWord = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -18,7 +18,7 @@ export default function AddWord() {
     if (trimmedWordName && trimmedMeaning) {
       setWordName('');
       setMeaning('');
-      const nextId = words[words.length - 1].id + 1;
+      const nextId = words.length > 0 ? words[words.length - 1].id + 1 : 1;
       try {
         await fetch('/dictionary/api/addWord', {
           method: 'POST',
