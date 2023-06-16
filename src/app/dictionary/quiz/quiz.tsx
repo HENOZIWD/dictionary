@@ -1,17 +1,17 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getRandomInt, shuffleArray } from '../lib/random';
 import { IAnswerData, IWordData } from '../lib/interface';
 import Question from './question';
-// import Result from './result';
+import Result from './result';
 
 interface IQuizProps {
   words: IWordData[];
 }
 
 export default function Quiz({ words }: IQuizProps) {
-  const shuffledWords: IWordData[] = useMemo(() => shuffleArray(words, 10), []);
+  const [shuffledWords, setShuffledWords] = useState<IWordData[]>(() => shuffleArray(words, 10));
   const [wordIndex, setWordIndex] = useState(0);
   const [questionType, setQuestionType] = useState(
     () => (getRandomInt(0, 2) === 0 ? 'wordName' : 'meaning'),
@@ -34,6 +34,13 @@ export default function Quiz({ words }: IQuizProps) {
     setAnswer((prev) => [...prev, receivedAnswer]);
   };
 
+  const retryQuiz = () => {
+    setShuffledWords(shuffleArray(words, 10));
+    setMount(false);
+    setAnswer([]);
+    setWordIndex(0);
+  };
+
   return (
     <div>
       {shuffledWords.length > 0 && wordIndex < shuffledWords.length
@@ -49,17 +56,13 @@ export default function Quiz({ words }: IQuizProps) {
        && (
        <>
          <div>Done!</div>
-         {/* <Result
+         <Result
            words={shuffledWords}
            answer={answer}
-         /> */}
+         />
          <button
            type="button"
-           onClick={() => {
-             setMount(false);
-             setAnswer([]);
-             setWordIndex(0);
-           }}
+           onClick={retryQuiz}
          >
            Retry?
          </button>

@@ -5,6 +5,7 @@ export interface IWordData {
 }
 
 export interface IAnswerData {
+  qId: number;
   questionType: string;
   answer: string;
 }
