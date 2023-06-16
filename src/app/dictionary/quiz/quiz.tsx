@@ -1,65 +1,29 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { getRandomInt, shuffleArray } from '../lib/random';
-import { useWords } from '../wordsContext';
-import { IWordData, IAnswerData } from '../lib/interface';
+import { IAnswerData, IWordData } from '../lib/interface';
+import Question from './question';
+// import Result from './result';
 
-interface IQuestionProps {
-  word: IWordData;
-  questionType: string;
-  updateAnswer: (receivedAnswer: IAnswerData) => void;
+interface IQuizProps {
+  words: IWordData[];
 }
 
-function Question({ word, questionType, updateAnswer }: IQuestionProps) {
-  const [answer, setAnswer] = useState('');
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, []);
-
-  const submitAnswer = (event: React.FormEvent) => {
-    event.preventDefault();
-
-    updateAnswer({ questionType, answer });
-    setAnswer('');
-  };
-
-  return (
-    <form onSubmit={submitAnswer}>
-      {questionType === 'meaning' && <div>{word.wordName}</div>}
-      <input
-        type="text"
-        value={answer}
-        onChange={(e) => setAnswer(e.target.value)}
-        ref={inputRef}
-      />
-      {questionType === 'wordName' && <div>{word.meaning}</div>}
-      <button type="submit">
-        Submit
-      </button>
-    </form>
-  );
-}
-
-export default function Quiz() {
-  const words: IWordData[] = shuffleArray(useWords(), 10);
+export default function Quiz({ words }: IQuizProps) {
+  const shuffledWords: IWordData[] = useMemo(() => shuffleArray(words, 10), []);
   const [wordIndex, setWordIndex] = useState(0);
   const [questionType, setQuestionType] = useState(
     () => (getRandomInt(0, 2) === 0 ? 'wordName' : 'meaning'),
   );
   const [answer, setAnswer] = useState<IAnswerData[]>([]);
-
   const [mount, setMount] = useState(false);
 
   useEffect(() => {
     if (mount) {
-      if (wordIndex < words.length) {
-        setWordIndex((prev) => prev + 1);
+      if (wordIndex < shuffledWords.length) {
         setQuestionType(getRandomInt(0, 2) === 0 ? 'wordName' : 'meaning');
+        setWordIndex((prev) => prev + 1);
       }
     } else {
       setMount(true);
@@ -72,18 +36,23 @@ export default function Quiz() {
 
   return (
     <div>
-      {words.length > 0 && wordIndex < words.length
+      {shuffledWords.length > 0 && wordIndex < shuffledWords.length
       && (
         <Question
-          word={words[wordIndex]}
+          qId={wordIndex}
+          word={shuffledWords[wordIndex]}
           questionType={questionType}
           updateAnswer={updateAnswer}
         />
       )}
-      {words.length > 0 && wordIndex >= words.length
+      {shuffledWords.length > 0 && wordIndex >= shuffledWords.length
        && (
        <>
          <div>Done!</div>
+         {/* <Result
+           words={shuffledWords}
+           answer={answer}
+         /> */}
          <button
            type="button"
            onClick={() => {
