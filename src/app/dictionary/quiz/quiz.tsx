@@ -1,13 +1,9 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { getRandomInt } from '../lib/random';
-import { IWordData, useWords } from '../wordsContext';
-
-interface IAnswerData {
-  questionType: string;
-  answer: string;
-}
+import { getRandomInt, shuffleArray } from '../lib/random';
+import { useWords } from '../wordsContext';
+import { IWordData, IAnswerData } from '../lib/interface';
 
 interface IQuestionProps {
   word: IWordData;
@@ -50,7 +46,7 @@ function Question({ word, questionType, updateAnswer }: IQuestionProps) {
 }
 
 export default function Quiz() {
-  const words = useWords();
+  const words: IWordData[] = shuffleArray(useWords(), 10);
   const [wordIndex, setWordIndex] = useState(0);
   const [questionType, setQuestionType] = useState(
     () => (getRandomInt(0, 2) === 0 ? 'wordName' : 'meaning'),
@@ -78,11 +74,11 @@ export default function Quiz() {
     <div>
       {words.length > 0 && wordIndex < words.length
       && (
-      <Question
-        word={words[wordIndex]}
-        questionType={questionType}
-        updateAnswer={updateAnswer}
-      />
+        <Question
+          word={words[wordIndex]}
+          questionType={questionType}
+          updateAnswer={updateAnswer}
+        />
       )}
       {words.length > 0 && wordIndex >= words.length
        && (
@@ -97,7 +93,6 @@ export default function Quiz() {
            }}
          >
            Retry?
-
          </button>
        </>
        )}
