@@ -1,12 +1,7 @@
 import React, {
   Dispatch, createContext, useContext, useEffect, useReducer, useState,
 } from 'react';
-
-export interface IWordData {
-  id: number;
-  wordName: string;
-  meaning: string;
-}
+import { IWordData } from './lib/interface';
 
 type IActionData = {
   type: 'added';

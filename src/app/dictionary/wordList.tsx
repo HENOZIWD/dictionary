@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useWords, IWordData, useWordsDispatch } from './wordsContext';
+import { useWords, useWordsDispatch } from './wordsContext';
+import { IWordData } from './lib/interface';
 
 interface IWordProps {
   index: number;
