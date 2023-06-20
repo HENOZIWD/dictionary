@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { IWordData, IAnswerData } from '../lib/interface';
+import { IWordData, IAnswerData } from '../../lib/interface';
 
 interface IQuestionProps {
   qId: number;
@@ -30,12 +30,14 @@ export default function Question({
   return (
     <form onSubmit={submitAnswer}>
       {questionType === 'meaning' && <div>{word.wordName}</div>}
-      <input
-        type="text"
-        value={answer}
-        onChange={(e) => setAnswer(e.target.value)}
-        ref={inputRef}
-      />
+      <div>
+        <input
+          type="text"
+          value={answer}
+          onChange={(e) => setAnswer(e.target.value)}
+          ref={inputRef}
+        />
+      </div>
       {questionType === 'wordName' && <div>{word.meaning}</div>}
       <button type="submit">
         Submit

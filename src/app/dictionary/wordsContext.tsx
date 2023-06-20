@@ -1,7 +1,7 @@
 import React, {
   Dispatch, createContext, useContext, useEffect, useReducer, useState,
 } from 'react';
-import { IWordData } from './lib/interface';
+import { IWordData } from '../lib/interface';
 
 type IActionData = {
   type: 'added';
@@ -69,7 +69,7 @@ export function WordsProvider({ children }: { children: React.ReactNode }) {
 
         if (sessionData === null) {
           try {
-            const res = await fetch('/dictionary/api/getWords', {
+            const res = await fetch('/api/getWords', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

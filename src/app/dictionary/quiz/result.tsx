@@ -1,5 +1,5 @@
 import React from 'react';
-import { IWordData, IAnswerData } from '../lib/interface';
+import { IWordData, IAnswerData } from '../../lib/interface';
 
 interface IResultProps {
   words: IWordData[];

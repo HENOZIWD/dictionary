@@ -26,7 +26,7 @@ export default function AddWord() {
     if (trimmedWordName && trimmedMeaning) {
       const nextId = words.length > 0 ? words[words.length - 1].id + 1 : 1;
       try {
-        await fetch('/dictionary/api/addWord', {
+        await fetch('/api/addWord', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

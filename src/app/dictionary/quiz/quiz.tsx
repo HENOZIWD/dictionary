@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { getRandomInt, shuffleArray } from '../lib/random';
-import { IAnswerData, IWordData } from '../lib/interface';
+import { getRandomInt, shuffleArray } from '../../lib/random';
+import { IAnswerData, IWordData } from '../../lib/interface';
 import Question from './question';
 import Result from './result';
 

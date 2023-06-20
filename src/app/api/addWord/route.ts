@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '../../lib/client';
+import { prisma } from '../../../lib/client';
 
 export const dynamic = 'force-dynamic';
 
@@ -9,11 +9,13 @@ export async function POST(req: NextRequest) {
     const { id } = requestBody;
     const { wordName } = requestBody;
     const { meaning } = requestBody;
-    const newEntry = await prisma.dictionary.update({
-      where: {
-        id,
-      },
+
+    if (!wordName || !meaning) {
+      throw new Error('Invalid params.');
+    }
+    const newEntry = await prisma.dictionary.create({
       data: {
+        id,
         wordName,
         meaning,
       },

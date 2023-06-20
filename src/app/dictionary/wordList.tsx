@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useWords, useWordsDispatch } from './wordsContext';
-import { IWordData } from './lib/interface';
+import { IWordData } from '../lib/interface';
 
 interface IWordProps {
   index: number;
@@ -22,7 +22,7 @@ function Word({ index, word }: IWordProps) {
     if (trimmedWordName && trimmedMeaning) {
       if (trimmedWordName !== word.wordName || trimmedMeaning !== word.meaning) {
         try {
-          await fetch('/dictionary/api/updateWord', {
+          await fetch('/api/updateWord', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ function Word({ index, word }: IWordProps) {
     event.preventDefault();
 
     try {
-      await fetch('/dictionary/api/deleteWord', {
+      await fetch('/api/deleteWord', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
