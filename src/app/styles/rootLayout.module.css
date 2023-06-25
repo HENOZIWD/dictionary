@@ -1,0 +1,15 @@
+.navbar {
+  display: flex;
+  justify-content:space-between;
+  padding: 1.5rem 2rem;
+  background-color: #fcf695;
+}
+
+.menu {
+  display: flex;
+  gap: 1rem;
+}
+
+.mainContent {
+  padding: 0 2rem;
+}

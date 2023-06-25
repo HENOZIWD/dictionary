@@ -1,15 +1,15 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '../../lib/client';
+import { NextResponse, NextRequest } from 'next/server';
+import { prisma } from '@/app/lib/client';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {
     const requestBody = await req.json();
-    const { id } = requestBody;
-    const newEntry = await prisma.dictionary.delete({
+    const { userId } = requestBody;
+    const newEntry = await prisma.word.findMany({
       where: {
-        id,
+        userId,
       },
     });
 

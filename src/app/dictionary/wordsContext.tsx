@@ -1,12 +1,7 @@
 import React, {
-  Dispatch, createContext, useContext, useEffect, useReducer,
+  Dispatch, createContext, useContext, useEffect, useReducer, useState,
 } from 'react';
-
-export interface IWordData {
-  id: number;
-  wordName: string;
-  meaning: string;
-}
+import { IWordData } from '../lib/interface';
 
 type IActionData = {
   type: 'added';
@@ -51,7 +46,7 @@ function wordsReducer(words: IWordData[], action: IActionData) {
     }
 
     case 'loaded': {
-      return [...words, ...action.words];
+      return action.words;
     }
 
     default: {
@@ -60,40 +55,53 @@ function wordsReducer(words: IWordData[], action: IActionData) {
   }
 }
 
-const getInitialWords = async () => {
-  try {
-    const res = await fetch('/dictionary/api/getWords', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    const data = await res.json();
-
-    return data;
-  } catch (error) {
-    console.error(error);
-
-    return undefined;
-  }
-};
-
-const initialState: IWordData[] = [];
-
 export function WordsProvider({ children }: { children: React.ReactNode }) {
   const [words, dispatch] = useReducer(
     wordsReducer,
-    initialState,
+    [],
   );
+  const [isInitialState, setIsInitialState] = useState(true);
 
   useEffect(() => {
-    getInitialWords().then((wordsData) => {
-      dispatch({
-        type: 'loaded',
-        words: wordsData,
-      });
-    });
-  }, []);
+    if (isInitialState) {
+      const loadSessionStorageData = async () => {
+        const sessionData = sessionStorage.getItem('words');
+
+        if (sessionData === null) {
+          try {
+            const res = await fetch('/api/getWords', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                userId: sessionStorage.getItem('userId'),
+              }),
+            });
+            const data = await res.json();
+            sessionStorage.setItem('words', JSON.stringify(data));
+
+            dispatch({
+              type: 'loaded',
+              words: data,
+            });
+          } catch (err) {
+            console.error(err);
+          }
+        } else {
+          dispatch({
+            type: 'loaded',
+            words: JSON.parse(sessionData),
+          });
+        }
+      };
+
+      loadSessionStorageData();
+      setIsInitialState(false);
+    } else {
+      sessionStorage.setItem('words', JSON.stringify(words));
+    }
+  }, [words]);
 
   return (
     <WordsContext.Provider value={words}>

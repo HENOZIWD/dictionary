@@ -1,17 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '../../lib/client';
+import { prisma } from '@/app/lib/client';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {
     const requestBody = await req.json();
-    const { id } = requestBody;
+    const { wordId } = requestBody;
     const { wordName } = requestBody;
     const { meaning } = requestBody;
-    const newEntry = await prisma.dictionary.update({
+    const { userId } = requestBody;
+    const newEntry = await prisma.word.update({
       where: {
-        id,
+        id_userId: { id: wordId, userId },
       },
       data: {
         wordName,

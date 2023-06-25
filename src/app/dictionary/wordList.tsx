@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
-import { IWordData, useWords, useWordsDispatch } from './wordsContext';
+import { useWords, useWordsDispatch } from './wordsContext';
+import { IWordData } from '../lib/interface';
 
-function Word({ word }: IWordProps) {
+interface IWordProps {
+  index: number;
+  word: IWordData;
+}
+
+function Word({ index, word }: IWordProps) {
   const dispatch = useWordsDispatch();
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editWordName, setEditWordName] = useState<string>(word.wordName);
@@ -16,15 +22,16 @@ function Word({ word }: IWordProps) {
     if (trimmedWordName && trimmedMeaning) {
       if (trimmedWordName !== word.wordName || trimmedMeaning !== word.meaning) {
         try {
-          await fetch('/dictionary/api/updateWord', {
+          await fetch('/api/updateWord', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              id: word.id,
+              wordId: word.id,
               wordName: trimmedWordName,
               meaning: trimmedMeaning,
+              userId: sessionStorage.getItem('userId'),
             }),
           });
 
@@ -51,22 +58,24 @@ function Word({ word }: IWordProps) {
     event.preventDefault();
 
     try {
-      await fetch('/dictionary/api/deleteWord', {
+      await fetch('/api/deleteWord', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          id: word.id,
+          wordId: word.id,
+          userId: sessionStorage.getItem('userId'),
         }),
+      });
+
+      dispatch({
+        type: 'deleted',
+        id: word.id,
       });
     } catch (err) {
       console.error(err);
     }
-    dispatch({
-      type: 'deleted',
-      id: word.id,
-    });
   };
 
   return (
@@ -74,13 +83,19 @@ function Word({ word }: IWordProps) {
       {!isEditing
         ? (
           <>
-            {word.id}
+            {index}
             .
             {word.wordName}
             :
             {word.meaning}
             &nbsp;
-            <button type="button" onClick={() => setIsEditing(true)}>Edit</button>
+            <button
+              type="button"
+              onClick={() => setIsEditing(true)}
+            >
+              Edit
+
+            </button>
             <button
               type="button"
               onClick={handleDelete}
@@ -130,13 +145,12 @@ export default function WordList() {
     <ul>
       {words.map((word) => (
         <li key={word.id}>
-          <Word word={word} />
+          <Word
+            index={word.id}
+            word={word}
+          />
         </li>
       ))}
     </ul>
   );
-}
-
-interface IWordProps {
-  word: IWordData;
 }
