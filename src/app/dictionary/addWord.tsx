@@ -32,11 +32,13 @@ export default function AddWord() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            id: nextId,
+            wordId: nextId,
             wordName: trimmedWordName,
             meaning: trimmedMeaning,
+            userId: sessionStorage.getItem('userId'),
           }),
         });
+
         dispatch({
           type: 'added',
           id: nextId,

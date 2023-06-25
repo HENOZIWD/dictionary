@@ -74,6 +74,9 @@ export function WordsProvider({ children }: { children: React.ReactNode }) {
               headers: {
                 'Content-Type': 'application/json',
               },
+              body: JSON.stringify({
+                userId: sessionStorage.getItem('userId'),
+              }),
             });
             const data = await res.json();
             sessionStorage.setItem('words', JSON.stringify(data));

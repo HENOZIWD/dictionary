@@ -28,9 +28,10 @@ function Word({ index, word }: IWordProps) {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              id: word.id,
+              wordId: word.id,
               wordName: trimmedWordName,
               meaning: trimmedMeaning,
+              userId: sessionStorage.getItem('userId'),
             }),
           });
 
@@ -63,7 +64,8 @@ function Word({ index, word }: IWordProps) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          id: word.id,
+          wordId: word.id,
+          userId: sessionStorage.getItem('userId'),
         }),
       });
 

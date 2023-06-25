@@ -6,10 +6,11 @@ export const dynamic = 'force-dynamic';
 export async function POST(req: NextRequest) {
   try {
     const requestBody = await req.json();
-    const { id } = requestBody;
-    const newEntry = await prisma.dictionary.delete({
+    const { wordId } = requestBody;
+    const { userId } = requestBody;
+    const newEntry = await prisma.word.delete({
       where: {
-        id,
+        id_userId: { id: wordId, userId },
       },
     });
 

@@ -1,4 +1,4 @@
-import { NextResponse, NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/app/lib/client';
 
 export const dynamic = 'force-dynamic';
@@ -6,10 +6,10 @@ export const dynamic = 'force-dynamic';
 export async function POST(req: NextRequest) {
   try {
     const requestBody = await req.json();
-    const { userId } = requestBody;
-    const newEntry = await prisma.word.findMany({
+    const { email } = requestBody;
+    const newEntry = await prisma.user.findUnique({
       where: {
-        userId,
+        email,
       },
     });
 
